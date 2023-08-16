@@ -94,7 +94,11 @@ else
 
 //trying to detect movement - periodically sampling the SENSOR_PIN
 //if movement was detected we notify the buzzer vit the NRF24 communication module
-
+if (digitalRead(SENSOR_PIN)) 
+{
+    const char txt[] = "Movement";
+    radio.write(&txt, sizeof(txt));
+}
 
 //global delay - 25[ms]
 hello_msg_counter++;

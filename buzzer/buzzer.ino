@@ -2,6 +2,9 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 #define BUZZER_PIN 5 
+int count = 0;
+boolean flag = false;
+
 
 RF24 radio(9, 10); // CE, CSN
 const byte address[6] = "00001";
@@ -34,8 +37,25 @@ void loop() {
   if (radio.available()) {
     char txt[32] = "";
     radio.read(&txt, sizeof(txt));
-    Serial.println(txt);
+    //Serial.println(txt);
     radio.writeAckPayload(1, "ack!", 5);
+    if (strcmp(txt, "Movement") == 0) {
+      flag = true;       
+    }
   }
+
+  if (flag)
+  {
+     tone(BUZZER_PIN, 250); // Send 1KHz sound signal...
+     count++;
+
+     if (count == 400) {
+        noTone(BUZZER_PIN);     // Stop sound...
+        count = 0;
+        flag = false;
+      }
+  }
+
+  delay(25);
 
 }
